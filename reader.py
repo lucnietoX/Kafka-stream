@@ -1,9 +1,6 @@
 import stomp
 import json
-import time
 import gzip
-import io
-import zlib
 
 file = open("/Users/lucianonieto/repo/Kafka-stream/config.cfg","r")
 cred = json.load(file)
@@ -20,19 +17,18 @@ class MyListener(stomp.ConnectionListener):
     def on_error(self, frame):
         print('received an error "%s"' % frame.body)
     def on_message(self, frame):
-        msg = gzip.decompress(frame.body)
-        print('received a message "%s"' % msg)
-
+        #msg = gzip.decompress(frame.body)
+        #print('received a message "%s"' % msg.decode())
+        print("Message ",frame.body)
+        #fd = open("/Users/lucianonieto/repo/Kafka-stream/output.txt", "a")
+        #fd.write(msg.decode())
+        #fd.close()
     def on_connected(self, frame):
         print("CONNECTED")
     def on_connecting(self, host_and_port):
         print("connecting..")
 
-
-c = stomp.Connection12([(messaging_host, stomp_port)],timeout=10,auto_decode=False)
-c.connect(user, password, wait=True)
+c = stomp.Connection([(messaging_host, stomp_port)])
+c.connect(user, password)
 c.set_listener('', MyListener())
 c.subscribe(destination="/topic/"+live_feed_topic, id=1, ack='auto')
-
-while True:
-    time.sleep(1)
