@@ -1,0 +1,4 @@
+requests
+stomp-py
+xmltodict
+pymongo
