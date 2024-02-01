@@ -1,6 +1,7 @@
 import stomp
 import json
 import gzip
+import xmltodict
 
 file = open("/Users/lucianonieto/repo/Kafka-stream/config.cfg","r")
 cred = json.load(file)
@@ -19,10 +20,9 @@ class MyListener(stomp.ConnectionListener):
     def on_message(self, frame):
         #msg = gzip.decompress(frame.body)
         #print('received a message "%s"' % msg.decode())
-        print("Message ",frame.body)
-        #fd = open("/Users/lucianonieto/repo/Kafka-stream/output.txt", "a")
-        #fd.write(msg.decode())
-        #fd.close()
+        xml_data = frame.body.replace("uk.co.nationalrail.xml.incident.PtIncidentStructure","PtIncident") #https://wiki.openraildata.com/KnowledgeBase
+        xml_dict = xmltodict.parse(xml_data)
+        print("Message ",xml_dict) 
     def on_connected(self, frame):
         print("CONNECTED")
     def on_connecting(self, host_and_port):
