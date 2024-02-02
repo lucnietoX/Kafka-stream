@@ -32,7 +32,7 @@ class MyListener(stomp.ConnectionListener):
         xml_data = msg.decode() #https://wiki.openraildata.com/KnowledgeBase
         xml_dict = xmltodict.parse(xml_data)
         #print("Message ",xml_dict) 
-        collection.insert_one(xml_dict)
+        collection.insert_one(xml_dict["Pport"]["uR"])
     def on_connected(self, frame):
         print("CONNECTED")
     def on_connecting(self, host_and_port):
