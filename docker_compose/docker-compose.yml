@@ -22,10 +22,34 @@ services:
                 depends_on:
                         - mongo
         
-        grafana:
-                image: grafana/grafana:latest
+        #grafana:
+        #        image: grafana/grafana:latest
+        #        ports:
+        #            - "3000:3000"
+
+        kafka-cluster:
+                image: landoop/fast-data-dev
+                environment:
+                        ADV_HOST: 127.0.0.1
+                        RUNTESTS: 0
                 ports:
-                    - "3000:3000"
+                        - 2181:2181
+                        - 3030:3030
+                        - 8081-8083:8081-8083
+                        - 9581-9585:9581-9585
+                        - 9092:9092
+                volumes:
+                        - ./data:/data/db
+
+        superset:
+                image: apache/superset:latest
+                container_name: superset
+                environment:
+                        - ADMIN_USERNAME=admin
+                        - ADMIN_EMAIL=admin@superset.com
+                        - ADMIN_PASSWORD=admin
+                ports:
+                        - '8088:8088'
 
 networks:
         mongo-compose-network:
